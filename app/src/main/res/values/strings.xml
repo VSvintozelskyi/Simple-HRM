@@ -12,4 +12,8 @@
     <string name="select_role">"Select your position:"</string>
     <string name="boss_role">"Boss"</string>
     <string name="worker_role">"Just another worker"</string>
+    <string name="connecttoserv">"Connect to server"</string>
+    <string name="ip">"Server IP"</string>
+    <string name="port">"port"</string>
+    <string name="connect">"connect"</string>
 </resources>

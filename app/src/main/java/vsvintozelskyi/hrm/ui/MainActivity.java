@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,8 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStart();
         account = GoogleSignIn.getLastSignedInAccount(this);
         if(account != null) {
-            setContentView(R.layout.layout_main);
-            showUserInfo();
+            connectToServer();
         }
     }
 
@@ -56,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.acc_logout:
                 mGoogleSignInClient.signOut();
                 setContentView(R.layout.activity_login);
+                break;
+            case R.id.conn_connect:
+                connect((Button)view);
                 break;
         }
     }
@@ -82,8 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             account = completedTask.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
-            setContentView(R.layout.layout_main);
-            showUserInfo();
+            connectToServer();
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -91,10 +94,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // TODO: remove this method
     private void showUserInfo(){
         findViewById(R.id.acc_logout).setOnClickListener(this);
         ((TextView) findViewById(R.id.acc_name)).setText(account.getDisplayName());
         ((TextView) findViewById(R.id.acc_email)).setText(account.getEmail());
         ((TextView) findViewById(R.id.acc_id)).setText(account.getId());
+    }
+
+    private void connectToServer(){
+        setContentView(R.layout.layout_connect);
+        findViewById(R.id.conn_connect).setOnClickListener(this);
+    }
+
+    private void connect(Button but){
+        but.setEnabled(false);
+        findViewById(R.id.conn_progress).setVisibility(View.VISIBLE);
+        EditText editTextIp = findViewById(R.id.conn_serverip);
+        EditText editTextPort = findViewById(R.id.conn_serverport);
+
     }
 }
