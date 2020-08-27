@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -13,7 +15,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import vsvintozelskyi.hrm.R;
 
@@ -21,18 +28,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private GoogleSignInClient mGoogleSignInClient;
     private int RC_SIGN_IN = 10;
-    static GoogleSignInAccount account;
-    private final GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .requestProfile()
-            .requestId()
-            .build();
+    private static GoogleSignInAccount account;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        updateUI(account);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.OAuthClientID))
+                .requestProfile()
+                .requestId()
+                .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        account = GoogleSignIn.getLastSignedInAccount(this);
+    }
+
+    private void updateUI(GoogleSignInAccount acc){
         if(account != null) {
             getUserData();
         }else{
@@ -79,12 +96,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     private void getUserData(){
         setContentView(R.layout.layout_loading);
-        String ss = "dasdas";
-        String text = getString(R.string.welcome, ss, 5);
-        ((TextView) findViewById(R.id.loading_welcome)).setText(text);
+        ((TextView) findViewById(R.id.loading_welcome)).setText(getString(R.string.welcome,account.getGivenName()));
     }
 
 //    private void connect(Button but){

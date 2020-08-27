@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <string name="app_name">Simple HRM</string>
-    <string name="welcome">Welcome, %2$d %1$s</string>
+    <string name="welcome">Welcome, %1$s!</string>
     <string name="ip">Server IP</string>
     <string name="port">port</string>
     <string name="connect">connect</string>
